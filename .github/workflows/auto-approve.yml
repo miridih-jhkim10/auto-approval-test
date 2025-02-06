@@ -6,15 +6,9 @@ jobs:
   auto-approve:
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pull-requests: write
     steps:
-      - name: Generate GitHub App JWT
-        id: generate_jwt
-        uses: tibdex/github-app-token@v2
-        with:
-          app_id: ${{ secrets.APP_ID }}
-          private_key: ${{ secrets.APP_PRIVATE_KEY }}
-
       - name: Check PR base and head
         id: check_pr
         run: |
@@ -29,6 +23,6 @@ jobs:
 
       - name: Approve PR
         if: env.APPROVE == 'true'
-        uses: hmarr/auto-approve-action@v3
+        uses: dkhmelenko/autoapproval@v1.0
         with:
-          github-token: ${{ steps.generate_jwt.outputs.token }}  # GitHub App 토큰 사용
+          github-token: ${{ secrets.GITHUB_TOKEN }}
